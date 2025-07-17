@@ -1,2 +1,2 @@
-# Saftey-Goggles
-A simple web browsing proxy which provides various safety features.
+# Safety Goggles
+A simple web browsing proxy that provides various safety features.
