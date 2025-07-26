@@ -7,5 +7,8 @@
     "start": "node index.js"
   },
   "author": "",
-  "license": "GPL-3.0"
+  "license": "GPL-3.0",
+  "dependencies": {
+    "jsdom": "^26.1.0"
+  }
 }
