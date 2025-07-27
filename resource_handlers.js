@@ -15,6 +15,13 @@ function replaceURLs(currentOrigin, newOrigin) {
 function html(url, content) {
     const jsdom = require('jsdom');
     const { JSDOM } = jsdom;
+
+    if (global.purify.enabled) {
+        const createDOMPurify = require('dompurify');
+        const DOMPurify = createDOMPurify((new JSDOM('')).window);
+        content = '<!DOCTYPE html>\n'+DOMPurify.sanitize(content, global.purify.configs);
+    }
+
     const dom = new JSDOM(content, {url});
 
     const replacer = replaceURLs(dom.window.location.origin, global.baseURL);
