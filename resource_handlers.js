@@ -1,3 +1,6 @@
+const jsdom = require('jsdom');
+const { JSDOM } = jsdom;
+
 function startsWithHTTP(url) {
     const regex = /^(http(s?)):\/\//i;
     return regex.test(url);
@@ -13,9 +16,6 @@ function replaceURLs(currentOrigin, newOrigin) {
 }
 
 function html(url, content) {
-    const jsdom = require('jsdom');
-    const { JSDOM } = jsdom;
-
     if (global.purify.enabled) {
         const createDOMPurify = require('dompurify');
         const DOMPurify = createDOMPurify((new JSDOM('')).window);
@@ -25,7 +25,7 @@ function html(url, content) {
     const dom = new JSDOM(content, {url});
 
     const replacer = replaceURLs(dom.window.location.origin, global.baseURL);
-    ['href', 'src', 'srcset', 'poster'].forEach(attribute => {
+    ['href', 'src', 'srcset', 'poster', 'action'].forEach(attribute => {
         dom.window.document.querySelectorAll(`[${attribute}]`)
         .forEach(replacer(attribute));
     });
@@ -41,9 +41,15 @@ async function retrieve_resource(url) {
     const response = await fetch(url, { redirect: 'manual' });
 
     if (response.status >= 300 && response.status < 400) {
-        const headers = {
-            Location: global.baseURL+'/'+response.headers.get('Location'),
-        };
+        if (!global.followRedirects) return {
+            status: 200,
+            body: 'Redirect disallowed.\nDestination URL: '+response.headers.get('Location'),
+        }
+        const headers = {};
+        if (response.headers.get('Location').substring(0, 1) === '/') {
+            const dom = new JSDOM('', {url});
+            headers.Location = global.baseURL + '/' + dom.window.location.origin + response.headers.get('Location');
+        } else headers.Location = global.baseURL + '/' + response.headers.get('Location');
         return {
             status: response.status,
             headers,

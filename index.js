@@ -13,6 +13,7 @@ global.port = parse(env.port) ?? 3000;
 global.hostname = env.hostname ?? 'localhost';
 global.secure = parse(env.secure) ?? false;
 global.baseURL = `http${global.secure?'s':''}://${global.hostname}:${global.port}`;
+global.followRedirects = parse(env.followRedirects) ?? true;
 
 const purifyConfigs = {
     USE_PROFILES: { html: true },

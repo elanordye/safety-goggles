@@ -20,6 +20,7 @@ The following snippet represents the default values as they would be within the 
 port = 3000
 hostname = 'localhost'
 secure = false
+followRedirects = true
 ```
 
 ### Purification Configuration
