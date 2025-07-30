@@ -1,6 +1,6 @@
 {
   "name": "safety-goggles",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A simple web browsing proxy that provides various safety features.",
   "main": "index.js",
   "scripts": {

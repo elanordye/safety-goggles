@@ -22,6 +22,7 @@ hostname = 'localhost'
 secure = false
 followRedirects = true
 allowDataURIs = false
+allowUnknownProtocols = false
 ```
 Note: I recommend allowing data URIs, as they are sometimes used to store images and such directly inside of HTML and CSS files.
 
@@ -30,7 +31,6 @@ Saftey Goggles completely purifies documents by default, disallowing all scripts
 ```env
 purifyEnabled = true
 cssEnabled = false
-allowUnknownProtocols = false
 wholeDocument = false
 headEnabled = false
 titleTagsEnabled = false
@@ -41,7 +41,6 @@ However, for most users, I recommend using something like the included `example.
 ```env
 purifyEnabled = true
 cssEnabled = true
-allowUnknownProtocols = false
 wholeDocument = true
 headEnabled = true
 titleTagsEnabled = true
