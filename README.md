@@ -27,16 +27,69 @@ followRedirects = true
 Saftey Goggles completely purifies documents by default, disallowing all scripts and CSS, as well as `<meta>`, `<title>`, and `<head>` tags. This results in very barebones webpages, which is usually not quite what's wanted. If this were written in the `.env` file manually, it would look something like this:
 ```env
 purifyEnabled = true
+cssEnabled = false
+allowUnknownProtocols = false
+wholeDocument = false
+headEnabled = false
 titleTagsEnabled = false
 metaTagsEnabled = false
-cssEnabled = false
-headEnabled = false
 ```
 However, for most users, I recommend using something like the included `example.env` (which allows `<head>`, `<meta>`, and `<title>` tags, as well as CSS, but still disallows scripts), and looks more like this:
 ```env
 purifyEnabled = true
+cssEnabled = true
+allowUnknownProtocols = false
+wholeDocument = true
+headEnabled = true
 titleTagsEnabled = true
 metaTagsEnabled = true
-cssEnabled = true
-headEnabled = true
 ```
+
+### Configuration Reference
+To make it easier to configure this program, I've written a list of each option and its function.
+#### Server Configuration
+- `port`
+  - The port on which to run the program.
+  - Type: Integer.
+  - Default value: `3000`.
+- `hostname`
+  - The hostname on which to run the program.
+  - Type: String.
+  - Default value: `localhost`.
+- `secure`
+  - Whether to use SSL (currently does virtually nothing).
+  - Type: Boolean.
+  - Default value: `false`.
+- `followRedirects`
+  - Whether to automatically follow redirections.
+  - Type: Boolean.
+  - Default value: `false`.
+#### Purification Configuration
+- `purifyEnabled`
+  - Whether to purify webpages using DOMPurify.
+  - Type: Boolean.
+  - Default value: `true`.
+- `cssEnabled`
+  - Whether to allow inline and file-based CSS to be used.
+  - Type: Boolean.
+  - Default value: `false`.
+- `allowUnknownProtocols`
+  - Whether to allow URIs with protocols which DOMPurify does not support.
+  - Type: Boolean.
+  - Default value: `false`.
+- `wholeDocument`
+  - Whether to return whole HTML documents (i.e., include the doctype, and the `<html>`, `<head>`, and `<body>` tags).
+  - Type: Boolean.
+  - Default value: `false`.
+- `headEnabled`
+  - Whether to allow `<head>` tags.
+  - Type: Boolean.
+  - Default value: `false`.
+- `titleTagsEnabled`
+  - Whether to allow `<title>` tags.
+  - Type: Boolean.
+  - Default value: `false`.
+- `metaTagsEnabled`
+  - Whether to allow `<meta>` tags.
+  - Type: Boolean.
+  - Default value: `false`.

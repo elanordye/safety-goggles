@@ -17,7 +17,8 @@ global.followRedirects = parse(env.followRedirects) ?? true;
 
 const purifyConfigs = {
     USE_PROFILES: { html: true },
-    WHOLE_DOCUMENT: true,
+    WHOLE_DOCUMENT: parse(env.wholeDocument) ?? false,
+    ALLOW_UNKNOWN_PROTOCOLS: parse(env.allowUnknownProtocols) ?? false,
     ADD_TAGS: [],
     ADD_ATTR: [],
     FORBID_TAGS: [],

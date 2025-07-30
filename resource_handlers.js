@@ -9,8 +9,10 @@ function startsWithHTTP(url) {
 function replaceURLs(currentOrigin, newOrigin) {
     return attribute => {
         return node => {
+            if (!node[attribute]) return;
             if (startsWithHTTP(node[attribute])) node[attribute] = newOrigin+'/'+node[attribute];
-            else node[attribute] = [newOrigin, currentOrigin, node[attribute]].join('/');
+            else if (node[attribute].startsWith('/')) node[attribute] = [newOrigin, currentOrigin, node[attribute]].join('/');
+            else node[attribute] = newOrigin+'/'+node[attribute];
         };
     };
 }
@@ -37,13 +39,14 @@ function html(url, content) {
     return dom.serialize();
 }
 
-async function retrieve_resource(url) {
+async function http(url) {
     const response = await fetch(url, { redirect: 'manual' });
 
     if (response.status >= 300 && response.status < 400) {
         if (!global.followRedirects) return {
             status: 200,
-            body: 'Redirect disallowed.\nDestination URL: '+response.headers.get('Location'),
+            body: `<!DOCTYPE html><head><title>Follow redirect?</title></head><body><h1>Follow redirect?</h1><p>Redirection has been disabled. Click the link below to follow the redirect.</p><p><a href="${url}">${url}</a></p></body>`,
+            headers: { 'Content-type': 'text/html;charset=utf-8' },
         }
         const headers = {};
         if (response.headers.get('Location').substring(0, 1) === '/') {
@@ -71,6 +74,15 @@ async function retrieve_resource(url) {
         body,
         status: response.status,
         headers,
+    };
+}
+
+async function retrieve_resource(url) {
+    if (url.startsWith('http')) return http(url);
+    else return {
+        body: `<!DOCTYPE html><head><title>Danger: External URI</title></head><body><h1>Warning! This is an external URI.</h1><p>Do not follow it unless you trust it.</p><p><a href="${url}">${url}</a></p></body>`,
+        status: 200,
+        headers: { 'Content-type': 'text/html;charset=utf-8' },
     };
 }
 
