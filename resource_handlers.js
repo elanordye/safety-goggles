@@ -44,7 +44,7 @@ async function http(url) {
 }
 
 async function retrieve_resource(url) {
-    if (url.startsWith('http')) return http(url);
+    if (url.startsWith('http') || (global.allowDataURIs && url.startsWith('data:'))) return http(url);
     else return {
         body: `<!DOCTYPE html><head><title>Danger: External URI</title></head><body><h1>Warning! This is an external URI.</h1><p>Do not follow it unless you trust it.</p><p><a href="${url}">${url}</a></p></body>`,
         status: 200,

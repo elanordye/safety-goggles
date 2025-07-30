@@ -21,10 +21,12 @@ port = 3000
 hostname = 'localhost'
 secure = false
 followRedirects = true
+allowDataURIs = false
 ```
+Note: I recommend allowing data URIs, as they are sometimes used to store images and such directly inside of HTML and CSS files.
 
 ### Purification Configuration
-Saftey Goggles completely purifies documents by default, disallowing all scripts and CSS, as well as `<meta>`, `<title>`, and `<head>` tags. This results in very barebones webpages, which is usually not quite what's wanted. If this were written in the `.env` file manually, it would look something like this:
+Saftey Goggles completely purifies documents by default, disallowing all scripts and CSS, as well as `<svg>`, `<meta>`, `<title>`, and `<head>` tags. This results in very barebones webpages, which is usually not quite what's wanted. If this were written in the `.env` file manually, it would look something like this:
 ```env
 purifyEnabled = true
 cssEnabled = false
@@ -33,6 +35,7 @@ wholeDocument = false
 headEnabled = false
 titleTagsEnabled = false
 metaTagsEnabled = false
+svgEnabled = false
 ```
 However, for most users, I recommend using something like the included `example.env` (which allows `<head>`, `<meta>`, and `<title>` tags, as well as CSS, but still disallows scripts), and looks more like this:
 ```env
@@ -43,6 +46,8 @@ wholeDocument = true
 headEnabled = true
 titleTagsEnabled = true
 metaTagsEnabled = true
+svgEnabled = true
+
 ```
 
 ### Configuration Reference

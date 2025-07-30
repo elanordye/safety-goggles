@@ -14,9 +14,10 @@ global.hostname = env.hostname ?? 'localhost';
 global.secure = parse(env.secure) ?? false;
 global.baseURL = `http${global.secure?'s':''}://${global.hostname}:${global.port}`;
 global.followRedirects = parse(env.followRedirects) ?? true;
+global.allowDataURIs = parse(env.allowDataURIs) ?? false;
 
 const purifyConfigs = {
-    USE_PROFILES: { html: true },
+    USE_PROFILES: { html: true, svg: parse(env.svgEnabled) ?? false },
     WHOLE_DOCUMENT: parse(env.wholeDocument) ?? false,
     ALLOW_UNKNOWN_PROTOCOLS: parse(env.allowUnknownProtocols) ?? false,
     ADD_TAGS: [],
