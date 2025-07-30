@@ -1,43 +1,8 @@
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 
-function startsWithHTTP(url) {
-    const regex = /^(http(s?)):\/\//i;
-    return regex.test(url);
-}
-
-function replaceURLs(currentOrigin, newOrigin) {
-    return attribute => {
-        return node => {
-            if (!node[attribute]) return;
-            if (startsWithHTTP(node[attribute])) node[attribute] = newOrigin+'/'+node[attribute];
-            else if (node[attribute].startsWith('/')) node[attribute] = [newOrigin, currentOrigin, node[attribute]].join('/');
-            else node[attribute] = newOrigin+'/'+node[attribute];
-        };
-    };
-}
-
-function html(url, content) {
-    if (global.purify.enabled) {
-        const createDOMPurify = require('dompurify');
-        const DOMPurify = createDOMPurify((new JSDOM('')).window);
-        content = '<!DOCTYPE html>\n'+DOMPurify.sanitize(content, global.purify.configs);
-    }
-
-    const dom = new JSDOM(content, {url});
-
-    const replacer = replaceURLs(dom.window.location.origin, global.baseURL);
-    ['href', 'src', 'srcset', 'poster', 'action'].forEach(attribute => {
-        dom.window.document.querySelectorAll(`[${attribute}]`)
-        .forEach(replacer(attribute));
-    });
-
-    const base = dom.window.document.createElement('base');
-    base.href = global.baseURL+'/'+dom.window.location.origin;
-    dom.window.document.head.appendChild(base);
-
-    return dom.serialize();
-}
+const html = require('./html.js');
+const css = require('./css.js');
 
 async function http(url) {
     const response = await fetch(url, { redirect: 'manual' });
@@ -67,6 +32,7 @@ async function http(url) {
     contentType = response.headers.get('Content-Type').split(';')[0].split('/');
     if (contentType[0] === 'text') {
         if (contentType[1] === 'html') body = html(url, await response.text());
+        else if (contentType[2] === 'css') body = css(url, await response.text());
         else body = await response.text();
     } else body = new Uint8Array(await response.arrayBuffer());
     
