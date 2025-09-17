@@ -40,12 +40,20 @@ global.purify = {
 
 const http = require('http');
 const retrieve_resource = require('./resource_handlers.js');
+const loadHtml = require('./loadHtml.js');
+const redirect = require('./redirect.js');
 
 const server = http.createServer(async (req, res) => {
-    let url = req.url.substring(1); // Excludes the initial forward slash
+    let uri = req.url.substring(1); // Excludes the initial forward slash
+
+    // Send index.html when requesting site root
+    if (!uri) return loadHtml(res, 'index.html');
+    // Parse query params on site root
+    if (uri.substring(0, 1) === '?') return redirect(res, uri);
+
     try {
         // Try to retrieve the requested resource
-        const {status, headers, body} = await retrieve_resource(url);
+        const {status, headers, body} = await retrieve_resource(uri);
         res.writeHead(status, headers);
         res.end(body);
     } catch (e) {
