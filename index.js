@@ -49,7 +49,7 @@ const server = http.createServer(async (req, res) => {
     // Send index.html when requesting site root
     if (!uri) return loadHtml(res, 'index.html');
     // Parse query params on site root
-    if (uri.substring(0, 1) === '?') return redirect(res, uri);
+    if (uri.substring(0, 1) === '?') return redirect(req, res, uri);
 
     try {
         // Try to retrieve the requested resource
